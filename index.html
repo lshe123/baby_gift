@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baby Gifts - ألعاب وجوائز</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <div class="user-profile">
+                <span id="user-name">المستخدم</span>
+                <span id="balance-view">💰 نظام الجوائز</span>
+            </div>
+            <div id="ton-connect-btn"></div>
+        </header>
+
+        <main>
+            <div class="gift-box-section">
+                <div class="gift-icon">🎁</div>
+                <h2>بوت ربح الهدايا والجوائز</h2>
+                <p>افتح الصناديق واربح هدايا وجوائز تليجرام المميزة!</p>
+            </div>
+
+            <div class="actions-grid">
+                <div class="card">
+                    <h3>صندوق هدايا برونزي 📦</h3>
+                    <p>يحتوي على جوائز عشوائية ونقاط مضاعفة داخل البوت.</p>
+                    <button class="btn buy-btn" onclick="buyItem(0.1, 'BRONZE_BOX')">شراء بـ 0.1 TON</button>
+                </div>
+                <div class="card">
+                    <h3>صندوق الجوائز الذهبي 👑</h3>
+                    <p>فرصة عالية جداً لربح ترقيات واشتراكات تليجرام المميز!</p>
+                    <button class="btn buy-btn vip" onclick="buyItem(0.5, 'GOLD_BOX')">شراء بـ 0.5 TON</button>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <div class="nav-item active">🎮 اللعبة</div>
+            <div class="nav-item" onclick="alert('قريباً: لوحة المتصدرين!')">🏆 الصدارة</div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
