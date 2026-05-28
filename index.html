@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Baby Gifts - ألعاب وجوائز</title>
+    <title>Baby Gifts - شحن الرصيد</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://unpkg.com/@tonconnect/ui@2.0.6/dist/tonconnect-ui.min.js"></script>
@@ -17,50 +17,86 @@
                     <img id="user-avatar" src="https://via.placeholder.com/40" alt="Avatar">
                 </div>
                 <div class="balance-details">
-                    <span id="user-name">علي</span>
+                    <span id="user-name">جاري التحميل...</span>
                     <div class="ton-balance-row">
-                        <span class="ton-mini-emoji">💎</span>
-                        <span id="balance-view">0.00</span>
+                        <img src="https://ton.org/download/ton_symbol.svg" class="ton-mini-logo" alt="TON">
+                        <span id="header-balance-view">0.012</span>
                     </div>
                 </div>
             </div>
             
             <div class="wallet-action-side">
-                <button id="custom-wallet-btn" class="connect-wallet-style">
-                    <span id="wallet-icon-placeholder">👛</span>
-                    <span id="wallet-text-placeholder">ربط المحفظة</span>
+                <button id="deposit-nav-btn" class="deposit-button-style">
+                    <span class="deposit-icon-style">🖲️</span>
+                    <span>Deposit</span>
                 </button>
-                <div id="ton-connect-btn" style="display: none;"></div>
             </div>
         </header>
 
         <main>
-            <div class="gift-box-section">
-                <div class="gift-icon">🎁</div>
-                <h2>بوت ربح الهدايا والجوائز</h2>
-                <p>افتح الصناديق واربح هدايا وجوائز تليجرام المميزة!</p>
+            <div id="game-view-section" class="view-section">
+                <div class="gift-box-section">
+                    <div class="gift-icon">🎁</div>
+                    <h2>بوت ربح الهدايا والجوائز</h2>
+                    <p>افتح الصناديق واربح هدايا وجوائز تليجرام المميزة!</p>
+                </div>
+
+                <div class="actions-grid">
+                    <div class="card">
+                        <h3>صندوق هدايا برونزي 📦</h3>
+                        <p>يحتوي على جوائز عشوائية ونقاط مضاعفة داخل البوت.</p>
+                        <button class="btn buy-btn" onclick="buyItem(0.1, 'BRONZE_BOX')">شراء بـ 0.1 TON</button>
+                    </div>
+                    <div class="card">
+                        <h3>صندوق الجوائز الذهبي 👑</h3>
+                        <p>فرصة عالية جداً لربح ترقيات واشتراكات تليجرام المميز!</p>
+                        <button class="btn buy-btn vip" onclick="buyItem(0.5, 'GOLD_BOX')">شراء بـ 0.5 TON</button>
+                    </div>
+                </div>
             </div>
 
-            <div class="actions-grid">
-                <div class="card">
-                    <h3>صندوق هدايا برونزي 📦</h3>
-                    <p>يحتوي على جوائز عشوائية ونقاط مضاعفة داخل البوت.</p>
-                    <button class="btn buy-btn" onclick="buyItem(0.1, 'BRONZE_BOX')">شراء بـ 0.1 TON</button>
-                </div>
-                <div class="card">
-                    <h3>صندوق الجوائز الذهبي 👑</h3>
-                    <p>فرصة عالية جداً لربح ترقيات واشتراكات تليجرام المميز!</p>
-                    <button class="btn buy-btn vip" onclick="buyItem(0.5, 'GOLD_BOX')">شراء بـ 0.5 TON</button>
+            <div id="deposit-view-section" class="view-section" style="display: none;">
+                <div class="top-up-container">
+                    <div class="back-row">
+                        <button id="back-to-game-btn" class="back-btn">⬅️ العودة للعبة</button>
+                        <h3>Top Up Balance</h3>
+                    </div>
+
+                    <div class="wallet-balance-card">
+                        <span class="card-label">رصيد المحفظة المتصلة:</span>
+                        <div class="card-value-row">
+                            <img src="https://ton.org/download/ton_symbol.svg" class="ton-card-logo" alt="TON">
+                            <span id="wallet-connected-balance">0.00 TON</span>
+                        </div>
+                    </div>
+
+                    <div class="input-section">
+                        <label>أدخل الكمية المراد شحنها (أقل حد 0.1 TON):</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="deposit-amount-input" value="0.1" step="0.1" min="0.1">
+                            <img src="https://ton.org/download/ton_symbol.svg" class="input-ton-logo" alt="TON">
+                        </div>
+                    </div>
+
+                    <div class="quick-buttons">
+                        <button onclick="setAmount(1)">+1 TON</button>
+                        <button onclick="setAmount(10)">+10 TON</button>
+                        <button onclick="setAmount(100)">+100 TON</button>
+                    </div>
+
+                    <button id="execute-deposit-btn" class="main-deposit-execute-btn">Top Up</button>
                 </div>
             </div>
         </main>
 
         <footer>
-            <div class="nav-item active">🎮 اللعبة</div>
-            <div class="nav-item" onclick="alert('قريباً: لوحة المتصدرين!')">🏆 الصدارة</div>
+            <div id="nav-game" class="nav-item active">🎮 اللعبة</div>
+            <div id="nav-leaderboard" class="nav-item" onclick="alert('قريباً: لوحة المتصدرين!')">🏆 الصدارة</div>
         </footer>
     </div>
 
-    <script src="script.js?v=888"></script>
+    <div id="ton-connect-hidden-element" style="display: none;"></div>
+
+    <script src="script.js?v=999"></script>
 </body>
 </html>
