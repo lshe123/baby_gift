@@ -1,76 +1,87 @@
 window.addEventListener("load", () => {
-    // 1. تهيئة تطبيق تليجرام المصغر وتوسيعه بالكامل
     const tg = window.Telegram?.WebApp;
+    
+    // 1. جلب بيانات المستخدم وصورته من تليجرام مباشرة
     if (tg) {
         tg.expand();
         tg.ready();
+        
         if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-            const userNameElement = document.getElementById('user-name');
-            if (userNameElement) {
-                userNameElement.innerText = tg.initDataUnsafe.user.first_name;
+            const user = tg.initDataUnsafe.user;
+            
+            // عرض الاسم الأول
+            document.getElementById('user-name').innerText = user.first_name;
+            
+            // جلب وعرض الصورة الشخصية للمستخدم إذا كانت متاحة، أو وضع صورة افتراضية فخمة
+            const avatarImg = document.getElementById('user-avatar');
+            if (user.photo_url) {
+                avatarImg.src = user.photo_url;
+            } else {
+                avatarImg.src = "https://api.dicebear.com/7.x/bottts/svg?seed=" + user.id;
             }
         }
     }
 
-    // 2. تهيئة وتوليد زر المحفظة بشكل صارم وضمان حقنه في الـ HTML
+    // 2. تهيئة مكتبة الـ TON Connect الأساسية
     let tonConnectUI;
-    
-    function initTonConnect() {
-        const targetDiv = document.getElementById('ton-connect-btn');
-        if (!targetDiv) return;
-
-        try {
-            // استخدام الرابط المباشر للمكتبة المعرفة في النافذة العالمية للمتصفح
-            tonConnectUI = new window.TONConnectUI.TonConnectUI({
-                manifestUrl: window.location.origin + '/tonconnect-manifest.json',
-                buttonRootId: 'ton-connect-btn'
-            });
-            
-            console.log("تمت تهيئة TON Connect بنجاح.");
-        } catch (error) {
-            console.error("خطأ أثناء محاولة بناء زر المحفظة:", error);
-        }
+    try {
+        tonConnectUI = new window.TONConnectUI.TonConnectUI({
+            manifestUrl: window.location.origin + '/tonconnect-manifest.json',
+            buttonRootId: 'ton-connect-btn'
+        });
+    } catch (error) {
+        console.error("خطأ في تهيئة المحفظة:", error);
     }
 
-    // تشغيل دالة بناء الزر فوراً
-    initTonConnect();
-
-    // دالة فحص وجلب رصيد المحفظة من سيرفر عالي السرعة وبدون حظر متصفحات
+    // دالة فحص وتحديث الرصيد الفعلي من البلوكشين مباشرة وعرضه كأرقام
     async function fetchAndDisplayBalance(walletAddress) {
         try {
             const balanceView = document.getElementById('balance-view');
-            if (!balanceView) return;
-            balanceView.innerText = "⏳ جاري تحديث الرصيد...";
             
             const response = await fetch(`https://tonapi.io/v2/accounts/${walletAddress}`);
             const data = await response.json();
             
             if (data && data.balance !== undefined) {
-                const tonBalance = (parseInt(data.balance) / 1000000000).toFixed(2); 
-                balanceView.innerText = `💎 رصيدك: ${tonBalance} TON`;
+                const tonBalance = (parseInt(data.balance) / 1000000000).toFixed(3); 
+                balanceView.innerText = tonBalance; // يظهر الرصيد كرقم دقيق مثل 0.012
             } else {
-                balanceView.innerText = "💎 متصل بالمحفظة";
+                balanceView.innerText = "0.00";
             }
         } catch (error) {
-            const balanceView = document.getElementById('balance-view');
-            if (balanceView) balanceView.innerText = "💎 متصل بالمحفظة";
+            console.error("خطأ أثناء جلب الرصيد:", error);
         }
     }
 
-    // مراقبة حالة اتصال وفصل المحفظة
-    if (tonConnectUI) {
+    // 3. التحكم بربط الزر المخصص والأنيق مع المكتبة الخلفية
+    const customWalletBtn = document.getElementById('custom-wallet-btn');
+    const walletText = document.getElementById('wallet-text-placeholder');
+
+    if (customWalletBtn && tonConnectUI) {
+        customWalletBtn.addEventListener('click', () => {
+            if (tonConnectUI.connected) {
+                tonConnectUI.disconnect();
+            } else {
+                tonConnectUI.openModal();
+            }
+        });
+
+        // مراقبة الاتصال وتغيير شكل الزر وجلب الرصيد الحقيقي فوراً
         tonConnectUI.onStatusChange((wallet) => {
-            const balanceView = document.getElementById('balance-view');
-            if (!balanceView) return;
             if (wallet && tonConnectUI.connected) {
+                // عند الاتصال: نغير الكلمة إلى "متصل" أو نختصر المحفظة ونحدث الرصيد
+                walletText.innerText = "متصل 👑";
+                customWalletBtn.style.background = "#27ae60"; // لون أخضر يدل على نجاح الاتصال
                 fetchAndDisplayBalance(wallet.account.address);
             } else {
-                balanceView.innerText = "💰 نظام الجوائز";
+                // عند الفصل: نرجع للوضع الافتراضي
+                walletText.innerText = "ربط المحفظة";
+                customWalletBtn.style.background = "#70a1ff"; 
+                document.getElementById('balance-view').innerText = "0.00";
             }
         });
     }
 
-    // دالة الدفع وشراء الصناديق داخل اللعبة
+    // دالة معالجة الدفع وعمليات الشراء داخل البوت
     window.buyItem = async function(amountInTon, itemName) {
         if (!tonConnectUI || !tonConnectUI.connected) {
             alert('الرجاء ربط محفظة Tonkeeper الخاصة بك أولاً عبر الزر الموجود في الأعلى!');
@@ -104,7 +115,7 @@ window.addEventListener("load", () => {
             alert("تم إرسال عملية الدفع بنجاح!");
             if (tonConnectUI.account) fetchAndDisplayBalance(tonConnectUI.account.address);
         } catch (error) {
-            alert("تم إلغاء عملية الدفع.");
+            alert("تم إلغاء عملية الدفع أو الرصيد غير كافٍ.");
         } finally {
             if (tg?.MainButton) tg.MainButton.hide();
         }
