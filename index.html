@@ -10,12 +10,27 @@
 </head>
 <body>
     <div class="app-container">
-        <div id="ton-connect-btn"></div>
-
-        <header>
-            <div class="user-profile">
-                <span id="user-name">المستخدم</span>
-                <span id="balance-view">💰 نظام الجوائز</span>
+        
+        <header class="custom-crypto-header">
+            <div class="user-info-side">
+                <div class="avatar-wrapper">
+                    <img id="user-avatar" src="https://via.placeholder.com/40" alt="Avatar">
+                </div>
+                <div class="balance-details">
+                    <span id="user-name">جاري التحميل...</span>
+                    <div class="ton-balance-row">
+                        <img src="https://ton.org/download/ton_symbol.svg" class="ton-mini-logo" alt="TON">
+                        <span id="balance-view">0.00</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="wallet-action-side">
+                <button id="custom-wallet-btn" class="connect-wallet-style">
+                    <span id="wallet-icon-placeholder">👛</span>
+                    <span id="wallet-text-placeholder">ربط المحفظة</span>
+                </button>
+                <div id="ton-connect-btn" style="display: none;"></div>
             </div>
         </header>
 
@@ -34,7 +49,7 @@
                 </div>
                 <div class="card">
                     <h3>صندوق الجوائز الذهبي 👑</h3>
-                    <p>فرصة عالية جداً لربح ترقيات وااشتراكات تليجرام المميز!</p>
+                    <p>فرصة عالية جداً لربح ترقيات واشتراكات تليجرام المميز!</p>
                     <button class="btn buy-btn vip" onclick="buyItem(0.5, 'GOLD_BOX')">شراء بـ 0.5 TON</button>
                 </div>
             </div>
@@ -46,6 +61,6 @@
         </footer>
     </div>
 
-    <script src="script.js?v=550"></script>
+    <script src="script.js?v=777"></script>
 </body>
 </html>
