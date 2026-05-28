@@ -1,8 +1,9 @@
-document.addEventListener("DOMContentLoaded", () => {
-    // 1. تهيئة تطبيق تليجرام المصغر المصاحب للبوت
+window.addEventListener("load", () => {
+    // 1. تهيئة تطبيق تليجرام المصغر وتوسيعه بالكامل
     const tg = window.Telegram?.WebApp;
     if (tg) {
         tg.expand();
+        tg.ready();
         if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
             const userNameElement = document.getElementById('user-name');
             if (userNameElement) {
@@ -11,18 +12,30 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // 2. تهيئة TON Connect لربط المحفظة بشكل سليم وآمن
+    // 2. تهيئة وتوليد زر المحفظة بشكل صارم وضمان حقنه في الـ HTML
     let tonConnectUI;
-    try {
-        tonConnectUI = new TONConnectUI.TonConnectUI({
-            manifestUrl: window.location.origin + '/tonconnect-manifest.json',
-            buttonRootId: 'ton-connect-btn'
-        });
-    } catch (e) {
-        console.error("فشلت تهيئة مكتبة المحفظة:", e);
+    
+    function initTonConnect() {
+        const targetDiv = document.getElementById('ton-connect-btn');
+        if (!targetDiv) return;
+
+        try {
+            // استخدام الرابط المباشر للمكتبة المعرفة في النافذة العالمية للمتصفح
+            tonConnectUI = new window.TONConnectUI.TonConnectUI({
+                manifestUrl: window.location.origin + '/tonconnect-manifest.json',
+                buttonRootId: 'ton-connect-btn'
+            });
+            
+            console.log("تمت تهيئة TON Connect بنجاح.");
+        } catch (error) {
+            console.error("خطأ أثناء محاولة بناء زر المحفظة:", error);
+        }
     }
 
-    // دالة فحص وجلب رصيد المحفظة من بلوكشين TON
+    // تشغيل دالة بناء الزر فوراً
+    initTonConnect();
+
+    // دالة فحص وجلب رصيد المحفظة من سيرفر عالي السرعة وبدون حظر متصفحات
     async function fetchAndDisplayBalance(walletAddress) {
         try {
             const balanceView = document.getElementById('balance-view');
@@ -44,6 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // مراقبة حالة اتصال وفصل المحفظة
     if (tonConnectUI) {
         tonConnectUI.onStatusChange((wallet) => {
             const balanceView = document.getElementById('balance-view');
@@ -56,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // دالة معالجة الدفع وعمليات الشراء داخل البوت
+    // دالة الدفع وشراء الصناديق داخل اللعبة
     window.buyItem = async function(amountInTon, itemName) {
         if (!tonConnectUI || !tonConnectUI.connected) {
             alert('الرجاء ربط محفظة Tonkeeper الخاصة بك أولاً عبر الزر الموجود في الأعلى!');
