@@ -25,7 +25,6 @@ body {
     box-shadow: 0 0 20px rgba(0,0,0,0.5);
 }
 
-/* التنسيق الجديد كلياً للهيدر المخصص والشبيه بالمنصات الاحترافية */
 .custom-crypto-header {
     display: flex;
     justify-content: space-between;
@@ -76,9 +75,8 @@ body {
     margin-top: 2px;
 }
 
-.ton-mini-logo {
-    width: 16px;
-    height: 16px;
+.ton-mini-emoji {
+    font-size: 14px;
 }
 
 #balance-view {
@@ -87,9 +85,8 @@ body {
     font-weight: 800;
 }
 
-/* تنسيق زر ربط المحفظة الفاخر والمستقل */
 .connect-wallet-style {
-    background-color: #70a1ff;
+    background-color: #24a1de;
     color: #ffffff;
     border: none;
     padding: 8px 14px;
@@ -100,12 +97,12 @@ body {
     display: flex;
     align-items: center;
     gap: 6px;
-    box-shadow: 0 2px 6px rgba(112, 161, 255, 0.4);
-    transition: background 0.3s ease;
+    box-shadow: 0 2px 6px rgba(36, 161, 222, 0.3);
+    transition: background 0.3s ease, transform 0.1s ease;
 }
 
 .connect-wallet-style:active {
-    transform: scale(0.97);
+    transform: scale(0.95);
 }
 
 main {
