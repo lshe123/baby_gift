@@ -1,15 +1,17 @@
 window.addEventListener("load", () => {
     const tg = window.Telegram?.WebApp;
     
-    // 1. جلب بيانات المستخدم وصورته من تليجرام مباشرة
+    // رصيد البوت الداخلي الافتراضي للمستخدم (يمكنك ربطه بقاعدة بيانات لاحقاً)
+    let internalBotBalance = 0.012; 
+    document.getElementById('header-balance-view').innerText = internalBotBalance.toFixed(3);
+
+    // 1. جلب صورة واسم المستخدم من تليجرام
     if (tg) {
         tg.expand();
         tg.ready();
-        
         if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
             const user = tg.initDataUnsafe.user;
             document.getElementById('user-name').innerText = user.first_name;
-            
             const avatarImg = document.getElementById('user-avatar');
             if (user.photo_url) {
                 avatarImg.src = user.photo_url;
@@ -19,102 +21,116 @@ window.addEventListener("load", () => {
         }
     }
 
-    // 2. تهيئة مكتبة الـ TON Connect الأساسية
+    // 2. تهيئة مكتبة TON Connect في الخلفية
     let tonConnectUI;
     try {
         tonConnectUI = new window.TONConnectUI.TonConnectUI({
             manifestUrl: window.location.origin + '/tonconnect-manifest.json',
-            buttonRootId: 'ton-connect-btn'
+            buttonRootId: 'ton-connect-hidden-element'
         });
     } catch (error) {
-        console.error("خطأ في تهيئة المحفظة:", error);
+        console.error("خطأ تهيئة المحفظة:", error);
     }
 
-    // دالة فحص وتحديث الرصيد الفعلي من البلوكشين مباشرة
-    async function fetchAndDisplayBalance(walletAddress) {
+    // دالة فحص رصيد المحفظة الخارجية لعرضه في خانة الشحن
+    async function fetchWalletBalance(walletAddress) {
         try {
-            const balanceView = document.getElementById('balance-view');
-            if (!balanceView) return;
-
             const response = await fetch(`https://tonapi.io/v2/accounts/${walletAddress}`);
             const data = await response.json();
-            
             if (data && data.balance !== undefined) {
-                const tonBalance = (parseInt(data.balance) / 1000000000).toFixed(3); 
-                balanceView.innerText = tonBalance; 
-            } else {
-                balanceView.innerText = "0.00";
+                const tonBalance = (parseInt(data.balance) / 1000000000).toFixed(2);
+                document.getElementById('wallet-connected-balance').innerText = `${tonBalance} TON`;
             }
-        } catch (error) {
-            console.error("خطأ أثناء جلب الرصيد:", error);
+        } catch (e) {
+            document.getElementById('wallet-connected-balance').innerText = "متصلة";
         }
     }
 
-    // 3. معالجة فتح قائمة المحافظ (Modal) عند الضغط على زر ربط المحفظة المخصص
-    const customWalletBtn = document.getElementById('custom-wallet-btn');
-    const walletText = document.getElementById('wallet-text-placeholder');
-
-    if (customWalletBtn && tonConnectUI) {
-        customWalletBtn.addEventListener('click', async () => {
-            if (tonConnectUI.connected) {
-                await tonConnectUI.disconnect();
-            } else {
-                // إجبار واجهة المكتبة على فتح نافذة اختيار المحفظة (Tonkeeper وغيرها)
-                await tonConnectUI.openModal();
-            }
-        });
-
-        // مراقبة الاتصال وتغيير الواجهة بشكل فوري وديناميكي
+    if (tonConnectUI) {
         tonConnectUI.onStatusChange((wallet) => {
             if (wallet && tonConnectUI.connected) {
-                walletText.innerText = "متصل 👑";
-                customWalletBtn.style.background = "#27ae60"; 
-                fetchAndDisplayBalance(wallet.account.address);
+                fetchWalletBalance(wallet.account.address);
             } else {
-                walletText.innerText = "ربط المحفظة";
-                customWalletBtn.style.background = "#24a1de"; 
-                document.getElementById('balance-view').innerText = "0.00";
+                document.getElementById('wallet-connected-balance').innerText = "غير متصلة";
             }
         });
     }
 
-    // دالة معالجة الدفع وعمليات الشراء داخل البوت
-    window.buyItem = async function(amountInTon, itemName) {
+    // 3. نظام تنقل الواجهات (مبادلة واجهة اللعبة بواجهة الإيداع)
+    const gameView = document.getElementById('game-view-section');
+    const depositView = document.getElementById('deposit-view-section');
+    
+    document.getElementById('deposit-nav-btn').addEventListener('click', () => {
+        gameView.style.display = 'none';
+        depositView.style.display = 'block';
+    });
+
+    document.getElementById('back-to-game-btn').addEventListener('click', () => {
+        depositView.style.display = 'none';
+        gameView.style.display = 'block';
+    });
+
+    // دالة الأزرار السريعة لتحديد المبلغ (+1, +10)
+    window.setAmount = function(val) {
+        document.getElementById('deposit-amount-input').value = val;
+    };
+
+    // 4. الضغط على زر الشحن الكبير (Top Up) وفتح محفظة Tonkeeper فوراً
+    document.getElementById('execute-deposit-btn').addEventListener('click', async () => {
+        // إذا لم تكن المحفظة مرتبطة، نفتح نافذة الربط أولاً
         if (!tonConnectUI || !tonConnectUI.connected) {
-            alert('الرجاء ربط محفظة Tonkeeper الخاصة بك أولاً عبر الزر الموجود في الأعلى!');
-            tonConnectUI?.openModal();
+            alert("يرجى اختيار محفظتك وربطها أولاً ليتم توجيهك لعملية الدفع!");
+            await tonConnectUI.openModal();
             return;
         }
 
-        const destinationWallet = "UQBfaYCuGyjtzwd0ryubNJBsxRW5oQAxLT6WSXzPhfEzwVO4"; 
-        const nanoAmount = (amountInTon * 1000000000).toString();
+        const inputAmount = parseFloat(document.getElementById('deposit-amount-input').value);
+        if (isNaN(inputAmount) || inputAmount < 0.1) {
+            alert("الحد الأدنى للشحن هو 0.1 TON");
+            return;
+        }
+
+        // عنوان محفظتك الشخصية لاستقبال الأموال الشاحنة
+        const myDestinationWallet = "UQBfaYCuGyjtzwd0ryubNJBsxRW5oQAxLT6WSXzPhfEzwVO4";
+        const nanoAmount = (inputAmount * 1000000000).toString();
 
         const transaction = {
             validUntil: Math.floor(Date.now() / 1000) + 300,
             messages: [
                 {
-                    address: destinationWallet,
+                    address: myDestinationWallet,
                     amount: nanoAmount,
-                    payload: btoa(JSON.stringify({
-                        userId: tg?.initDataUnsafe?.user?.id || 0,
-                        item: itemName
-                    }))
+                    payload: btoa(JSON.stringify({ userId: tg?.initDataUnsafe?.user?.id || 0, action: "TOP_UP" }))
                 }
             ]
         };
 
         try {
-            if (tg?.MainButton) {
-                tg.MainButton.setText("جاري فتح المحفظة وتأكيد الدفع...");
-                tg.MainButton.show();
-            }
+            alert("سيتم توجيهك الآن إلى تطبيق المحفظة (Tonkeeper) لتأكيد عملية الشحن...");
             await tonConnectUI.sendTransaction(transaction);
-            alert("تم إرسال عملية الدفع بنجاح!");
-            if (tonConnectUI.account) fetchAndDisplayBalance(tonConnectUI.account.address);
+            
+            // عند نجاح المعاملة، يتم إضافة الرصيد إلى رصيد البوت في الهيدر ترحيبياً
+            internalBotBalance += inputAmount;
+            document.getElementById('header-balance-view').innerText = internalBotBalance.toFixed(3);
+            
+            alert("🎯 تم استلام الشحنة بنجاح وتحديث رصيدك داخل البوت!");
+            depositView.style.display = 'none';
+            gameView.style.display = 'block';
         } catch (error) {
-            alert("تم إلغاء عملية الدفع.");
-        } finally {
-            if (tg?.MainButton) tg.MainButton.hide();
+            alert("❌ تم إلغاء عملية الدفع أو أن الرصيد بمحفظتك غير كافٍ.");
+        }
+    });
+
+    // دالة الشراء المباشر للصناديق باستخدام رصيد البوت المشحون
+    window.buyItem = function(price, name) {
+        if (internalBotBalance >= price) {
+            internalBotBalance -= price;
+            document.getElementById('header-balance-view').innerText = internalBotBalance.toFixed(3);
+            alert(`🎉 مبروك! نجحت في شراء ${name} وتم خصم القيمة من رصيدك الشاحن.`);
+        } else {
+            alert("❌ رصيدك الحالي غير كافٍ! اضغط على زر Deposit في الأعلى لشحن حسابك عبر Tonkeeper.");
+            gameView.style.display = 'none';
+            depositView.style.display = 'block';
         }
     };
 });
