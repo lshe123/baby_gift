@@ -8,11 +8,8 @@ window.addEventListener("load", () => {
         
         if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
             const user = tg.initDataUnsafe.user;
-            
-            // عرض الاسم الأول
             document.getElementById('user-name').innerText = user.first_name;
             
-            // جلب وعرض الصورة الشخصية للمستخدم إذا كانت متاحة، أو وضع صورة افتراضية فخمة
             const avatarImg = document.getElementById('user-avatar');
             if (user.photo_url) {
                 avatarImg.src = user.photo_url;
@@ -33,17 +30,18 @@ window.addEventListener("load", () => {
         console.error("خطأ في تهيئة المحفظة:", error);
     }
 
-    // دالة فحص وتحديث الرصيد الفعلي من البلوكشين مباشرة وعرضه كأرقام
+    // دالة فحص وتحديث الرصيد الفعلي من البلوكشين مباشرة
     async function fetchAndDisplayBalance(walletAddress) {
         try {
             const balanceView = document.getElementById('balance-view');
-            
+            if (!balanceView) return;
+
             const response = await fetch(`https://tonapi.io/v2/accounts/${walletAddress}`);
             const data = await response.json();
             
             if (data && data.balance !== undefined) {
                 const tonBalance = (parseInt(data.balance) / 1000000000).toFixed(3); 
-                balanceView.innerText = tonBalance; // يظهر الرصيد كرقم دقيق مثل 0.012
+                balanceView.innerText = tonBalance; 
             } else {
                 balanceView.innerText = "0.00";
             }
@@ -52,30 +50,29 @@ window.addEventListener("load", () => {
         }
     }
 
-    // 3. التحكم بربط الزر المخصص والأنيق مع المكتبة الخلفية
+    // 3. معالجة فتح قائمة المحافظ (Modal) عند الضغط على زر ربط المحفظة المخصص
     const customWalletBtn = document.getElementById('custom-wallet-btn');
     const walletText = document.getElementById('wallet-text-placeholder');
 
     if (customWalletBtn && tonConnectUI) {
-        customWalletBtn.addEventListener('click', () => {
+        customWalletBtn.addEventListener('click', async () => {
             if (tonConnectUI.connected) {
-                tonConnectUI.disconnect();
+                await tonConnectUI.disconnect();
             } else {
-                tonConnectUI.openModal();
+                // إجبار واجهة المكتبة على فتح نافذة اختيار المحفظة (Tonkeeper وغيرها)
+                await tonConnectUI.openModal();
             }
         });
 
-        // مراقبة الاتصال وتغيير شكل الزر وجلب الرصيد الحقيقي فوراً
+        // مراقبة الاتصال وتغيير الواجهة بشكل فوري وديناميكي
         tonConnectUI.onStatusChange((wallet) => {
             if (wallet && tonConnectUI.connected) {
-                // عند الاتصال: نغير الكلمة إلى "متصل" أو نختصر المحفظة ونحدث الرصيد
                 walletText.innerText = "متصل 👑";
-                customWalletBtn.style.background = "#27ae60"; // لون أخضر يدل على نجاح الاتصال
+                customWalletBtn.style.background = "#27ae60"; 
                 fetchAndDisplayBalance(wallet.account.address);
             } else {
-                // عند الفصل: نرجع للوضع الافتراضي
                 walletText.innerText = "ربط المحفظة";
-                customWalletBtn.style.background = "#70a1ff"; 
+                customWalletBtn.style.background = "#24a1de"; 
                 document.getElementById('balance-view').innerText = "0.00";
             }
         });
@@ -115,7 +112,7 @@ window.addEventListener("load", () => {
             alert("تم إرسال عملية الدفع بنجاح!");
             if (tonConnectUI.account) fetchAndDisplayBalance(tonConnectUI.account.address);
         } catch (error) {
-            alert("تم إلغاء عملية الدفع أو الرصيد غير كافٍ.");
+            alert("تم إلغاء عملية الدفع.");
         } finally {
             if (tg?.MainButton) tg.MainButton.hide();
         }
