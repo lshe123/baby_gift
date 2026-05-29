@@ -3,100 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Baby Gifts - شحن الرصيد</title>
+    <title>Epic Gift & Rocket Game</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://unpkg.com/@tonconnect/ui@2.0.6/dist/tonconnect-ui.min.js"></script>
 </head>
 <body>
+    <div id="language-overlay" class="lang-modal">
+        <div class="lang-box">
+            <h2>اختر اللغة / Choose Language</h2>
+            <p>يرجى تحديد لغة الواجهة المفضلة لبدء اللعب</p>
+            <div class="lang-buttons">
+                <button onclick="selectLanguage('ar')">العربية 🇸🇦</button>
+                <button onclick="selectLanguage('en')">English 🇬🇧</button>
+            </div>
+        </div>
+    </div>
+
     <div class="app-container">
-        
         <header class="custom-crypto-header">
             <div class="user-info-side">
                 <div class="avatar-wrapper">
                     <img id="user-avatar" src="https://via.placeholder.com/40" alt="Avatar">
                 </div>
                 <div class="balance-details">
-                    <span id="user-name">جاري التحميل...</span>
+                    <span id="user-name">User</span>
                     <div class="ton-balance-row">
                         <img src="https://ton.org/download/ton_symbol.svg" class="ton-mini-logo" alt="TON">
-                        <span id="header-balance-view">0.012</span>
+                        <span id="header-balance-view">0.022</span>
                     </div>
                 </div>
             </div>
-            
             <div class="wallet-action-side">
                 <button id="deposit-nav-btn" class="deposit-button-style">
-                    <span class="deposit-icon-style">🖲️</span>
-                    <span>Deposit</span>
+                    <span>💎 Deposit</span>
                 </button>
             </div>
         </header>
 
         <main>
             <div id="game-view-section" class="view-section">
-                <div class="gift-box-section">
-                    <div class="gift-icon">🎁</div>
-                    <h2>بوت ربح الهدايا والجوائز</h2>
-                    <p>افتح الصناديق واربح هدايا وجوائز تليجرام المميزة!</p>
+                <div class="rocket-game-card">
+                    <div class="card-tag">🚀 ROCKET GAME</div>
+                    <div id="rocket-animation-area" class="rocket-sky">
+                        <div id="rocket-sprite" class="rocket-element">🚀</div>
+                        <div id="live-multiplier">1.00x</div>
+                    </div>
+                    <div class="rocket-controls">
+                        <button id="place-bet-btn" onclick="startRocketRound()">Place Bet</button>
+                    </div>
                 </div>
 
-                <div class="actions-grid">
-                    <div class="card">
-                        <h3>صندوق هدايا برونزي 📦</h3>
-                        <p>يحتوي على جوائز عشوائية ونقاط مضاعفة داخل البوت.</p>
-                        <button class="btn buy-btn" onclick="buyItem(0.1, 'BRONZE_BOX')">شراء بـ 0.1 TON</button>
+                <h3 id="section-boxes-title">الصناديق المتاحة (تغيير شكل الصندوق)</h3>
+                <div class="boxes-grid">
+                    <div class="gift-box-card variant-premium">
+                        <div class="neon-box-icon">📦✨</div>
+                        <h4 class="box-name">Daily Box</h4>
+                        <button class="open-box-btn" onclick="openGiftBox('Daily Box')">Open Box</button>
                     </div>
-                    <div class="card">
-                        <h3>صندوق الجوائز الذهبي 👑</h3>
-                        <p>فرصة عالية جداً لربح ترقيات واشتراكات تليجرام المميز!</p>
-                        <button class="btn buy-btn vip" onclick="buyItem(0.5, 'GOLD_BOX')">شراء بـ 0.5 TON</button>
+
+                    <div class="gift-box-card variant-luxury">
+                        <div class="neon-box-icon">🔮💎</div>
+                        <h4 class="box-name">Farm Box</h4>
+                        <button class="open-box-btn" onclick="openGiftBox('Farm Box')">Open Box</button>
+                    </div>
+
+                    <div class="gift-box-card variant-ultimate">
+                        <div class="neon-box-icon">👑🌟</div>
+                        <h4 class="box-name">Telegram Box</h4>
+                        <button class="open-box-btn" onclick="openGiftBox('Telegram Box')">Open Box</button>
                     </div>
                 </div>
             </div>
 
             <div id="deposit-view-section" class="view-section" style="display: none;">
                 <div class="top-up-container">
-                    <div class="back-row">
-                        <button id="back-to-game-btn" class="back-btn">⬅️ العودة للعبة</button>
-                        <h3>Top Up Balance</h3>
+                    <button id="back-to-game-btn" class="back-btn">⬅️ Back</button>
+                    <h3>Top Up Balance</h3>
+                    <div class="input-wrapper">
+                        <input type="number" id="deposit-amount-input" value="1" min="0.1">
+                        <img src="https://ton.org/download/ton_symbol.svg" class="input-ton-logo" alt="TON">
                     </div>
-
-                    <div class="wallet-balance-card">
-                        <span class="card-label">رصيد المحفظة المتصلة:</span>
-                        <div class="card-value-row">
-                            <img src="https://ton.org/download/ton_symbol.svg" class="ton-card-logo" alt="TON">
-                            <span id="wallet-connected-balance">0.00 TON</span>
-                        </div>
-                    </div>
-
-                    <div class="input-section">
-                        <label>أدخل الكمية المراد شحنها (أقل حد 0.1 TON):</label>
-                        <div class="input-wrapper">
-                            <input type="number" id="deposit-amount-input" value="0.1" step="0.1" min="0.1">
-                            <img src="https://ton.org/download/ton_symbol.svg" class="input-ton-logo" alt="TON">
-                        </div>
-                    </div>
-
-                    <div class="quick-buttons">
-                        <button onclick="setAmount(1)">+1 TON</button>
-                        <button onclick="setAmount(10)">+10 TON</button>
-                        <button onclick="setAmount(100)">+100 TON</button>
-                    </div>
-
                     <button id="execute-deposit-btn" class="main-deposit-execute-btn">Top Up</button>
                 </div>
             </div>
         </main>
-
-        <footer>
-            <div id="nav-game" class="nav-item active">🎮 اللعبة</div>
-            <div id="nav-leaderboard" class="nav-item" onclick="alert('قريباً: لوحة المتصدرين!')">🏆 الصدارة</div>
-        </footer>
     </div>
 
     <div id="ton-connect-hidden-element" style="display: none;"></div>
-
-    <script src="script.js?v=999"></script>
+    <script src="script.js"></script>
 </body>
 </html>
