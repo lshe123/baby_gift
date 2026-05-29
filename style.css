@@ -65,7 +65,7 @@ body {
     cursor: pointer;
 }
 
-/* الهيدر وضمان مظهر دائري بدون كسور للصورة */
+/* الهيدر */
 .custom-crypto-header {
     display: flex;
     justify-content: space-between;
@@ -114,12 +114,14 @@ body {
 .ton-balance-row {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
     margin-top: 2px;
 }
 
-.ton-sticker-icon {
-    font-size: 18px;
+.ton-mini-logo {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
 }
 
 #header-balance-view {
@@ -155,7 +157,7 @@ body {
 }
 
 .rocket-sky {
-    height: 140px;
+    height: 165px;
     background: radial-gradient(circle at bottom, #1c1c30, #0d0d12);
     border-radius: 14px;
     position: relative;
@@ -166,11 +168,14 @@ body {
     margin: 12px 0;
 }
 
+/* ضبط الطائرة المحدثة لتظهر بحجم متناسق دون تمدد */
 .rocket-element {
-    font-size: 36px;
+    width: 55px;
+    height: auto;
     position: absolute;
     bottom: 15px;
     left: 15px;
+    object-fit: contain;
     transition: transform 0.05s linear;
 }
 
@@ -178,6 +183,7 @@ body {
     font-size: 32px;
     font-weight: 900;
     color: #2ecc71;
+    z-index: 5;
 }
 
 .rocket-controls button {
@@ -191,7 +197,7 @@ body {
     cursor: pointer;
 }
 
-/* الشكل الفخم الجذاب الجديد تماماً لتصميم الصناديق والمكافآت */
+/* الصناديق والمكافآت */
 #section-boxes-title {
     padding: 0 20px;
     font-size: 15px;
@@ -256,7 +262,7 @@ body {
     cursor: pointer;
 }
 
-/* واجهة الشحن الحصرية */
+/* واجهة الشحن */
 .top-up-container {
     padding: 20px;
 }
@@ -295,13 +301,27 @@ body {
     border-radius: 12px;
     font-size: 16px;
     font-weight: bold;
+    padding-right: 85px; /* مساحة للشعار على اليمين */
 }
 
-.input-ton-sticker {
+.input-sticker-wrapper {
     position: absolute;
-    left: 15px;
+    right: 15px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.input-ton-logo-inner {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+}
+
+.input-ton-text {
     font-weight: bold;
-    color: #fab005;
+    color: #6c5ce7;
+    font-size: 14px;
 }
 
 .quick-deposit-buttons {
