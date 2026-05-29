@@ -21,6 +21,18 @@
         </div>
     </div>
 
+    <div id="prize-modal" class="prize-overlay" style="display: none;">
+        <div class="prize-card animate-pop">
+            <h2 id="prize-modal-title">🎉 مبروك الفوز!</h2>
+            <div class="prize-image-container">
+                <img id="prize-modal-img" src="" alt="Prize">
+            </div>
+            <h3 id="prize-modal-name">اسم الهدية</h3>
+            <p id="prize-modal-value">القيمة: 0.00 TON</p>
+            <button onclick="closePrizeModal()" class="close-prize-btn">رائع! / Awesome</button>
+        </div>
+    </div>
+
     <div class="app-container">
         <header class="custom-crypto-header">
             <div class="user-info-side">
@@ -61,31 +73,14 @@
                 <div class="boxes-grid">
                     
                     <div class="gift-box-card variant-premium">
-                        <div class="neon-box-icon">👑</div>
+                        <div class="neon-box-icon">🎁✨</div>
                         <div class="box-info-text">
-                            <h4 class="box-name">Daily Box</h4>
-                            <p class="box-desc">احتمال 90% ربح TON مباشر</p>
+                            <h4 class="box-name">Free 24h Box</h4>
+                            <p class="box-desc" id="box-cooldown-text">صندوق مجاني كل 24 ساعة أو الدفع (0.5 TON)</p>
                         </div>
-                        <button class="open-box-btn" onclick="openGiftBox('Daily Box')">Open</button>
+                        <button class="open-box-btn" id="open-box-action-btn" onclick="tryOpenFreeBox()">Open</button>
                     </div>
 
-                    <div class="gift-box-card variant-luxury">
-                        <div class="neon-box-icon">💎</div>
-                        <div class="box-info-text">
-                            <h4 class="box-name">Farm Box</h4>
-                            <p class="box-desc">احتمال فوز جوائز وسحب فوري</p>
-                        </div>
-                        <button class="open-box-btn" onclick="openGiftBox('Farm Box')">Open</button>
-                    </div>
-
-                    <div class="gift-box-card variant-ultimate">
-                        <div class="neon-box-icon">🎁</div>
-                        <div class="box-info-text">
-                            <h4 class="box-name">Telegram Box</h4>
-                            <p class="box-desc">صندوق الجوائز الكبرى والنادرة</p>
-                        </div>
-                        <button class="open-box-btn" onclick="openGiftBox('Telegram Box')">Open</button>
-                    </div>
                 </div>
             </div>
 
@@ -120,6 +115,6 @@
     </div>
 
     <div id="ton-connect-hidden-element" style="display: none;"></div>
-    <script src="script.js?v=995"></script>
+    <script src="script.js?v=997"></script>
 </body>
 </html>
