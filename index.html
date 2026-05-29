@@ -9,6 +9,7 @@
     <script src="https://unpkg.com/@tonconnect/ui@2.0.6/dist/tonconnect-ui.min.js"></script>
 </head>
 <body>
+
     <div id="language-overlay" class="lang-modal">
         <div class="lang-box">
             <h2>اختر اللغة / Choose Language</h2>
@@ -23,26 +24,28 @@
     <div class="app-container">
         <header class="custom-crypto-header">
             <div class="user-info-side">
-                <div class="avatar-wrapper">
-                    <img id="user-avatar" src="https://via.placeholder.com/40" alt="Avatar">
+                <div class="avatar-wrapper" id="avatar-container">
+                    <img id="user-avatar" src="" alt="User" style="display:none;">
+                    <div id="user-avatar-fallback" class="avatar-fallback">ع</div>
                 </div>
                 <div class="balance-details">
-                    <span id="user-name">User</span>
+                    <span id="user-name">علي</span>
                     <div class="ton-balance-row">
-                        <img src="https://ton.org/download/ton_symbol.svg" class="ton-mini-logo" alt="TON">
-                        <span id="header-balance-view">0.022</span>
+                        <span class="ton-sticker-icon">💎</span>
+                        <span id="header-balance-view">0.00</span>
                     </div>
                 </div>
             </div>
             <div class="wallet-action-side">
                 <button id="deposit-nav-btn" class="deposit-button-style">
-                    <span>💎 Deposit</span>
+                    <span>🖲️ Deposit</span>
                 </button>
             </div>
         </header>
 
         <main>
             <div id="game-view-section" class="view-section">
+                
                 <div class="rocket-game-card">
                     <div class="card-tag">🚀 ROCKET GAME</div>
                     <div id="rocket-animation-area" class="rocket-sky">
@@ -54,36 +57,59 @@
                     </div>
                 </div>
 
-                <h3 id="section-boxes-title">الصناديق المتاحة (تغيير شكل الصندوق)</h3>
+                <h3 id="section-boxes-title">📦 الصناديق والمكافآت النشطة</h3>
                 <div class="boxes-grid">
+                    
                     <div class="gift-box-card variant-premium">
-                        <div class="neon-box-icon">📦✨</div>
-                        <h4 class="box-name">Daily Box</h4>
-                        <button class="open-box-btn" onclick="openGiftBox('Daily Box')">Open Box</button>
+                        <div class="neon-box-icon">👑</div>
+                        <div class="box-info-text">
+                            <h4 class="box-name">Daily Box</h4>
+                            <p class="box-desc">احتمال 90% ربح TON مباشر</p>
+                        </div>
+                        <button class="open-box-btn" onclick="openGiftBox('Daily Box')">Open</button>
                     </div>
 
                     <div class="gift-box-card variant-luxury">
-                        <div class="neon-box-icon">🔮💎</div>
-                        <h4 class="box-name">Farm Box</h4>
-                        <button class="open-box-btn" onclick="openGiftBox('Farm Box')">Open Box</button>
+                        <div class="neon-box-icon">💎</div>
+                        <div class="box-info-text">
+                            <h4 class="box-name">Farm Box</h4>
+                            <p class="box-desc">احتمال فوز جوائز وسحب فوري</p>
+                        </div>
+                        <button class="open-box-btn" onclick="openGiftBox('Farm Box')">Open</button>
                     </div>
 
                     <div class="gift-box-card variant-ultimate">
-                        <div class="neon-box-icon">👑🌟</div>
-                        <h4 class="box-name">Telegram Box</h4>
-                        <button class="open-box-btn" onclick="openGiftBox('Telegram Box')">Open Box</button>
+                        <div class="neon-box-icon">🎁</div>
+                        <div class="box-info-text">
+                            <h4 class="box-name">Telegram Box</h4>
+                            <p class="box-desc">صندوق الجوائز الكبرى والنادرة</p>
+                        </div>
+                        <button class="open-box-btn" onclick="openGiftBox('Telegram Box')">Open</button>
                     </div>
                 </div>
             </div>
 
             <div id="deposit-view-section" class="view-section" style="display: none;">
                 <div class="top-up-container">
-                    <button id="back-to-game-btn" class="back-btn">⬅️ Back</button>
+                    <button id="back-to-game-btn" class="back-btn">⬅️ العودة للعبة / Back</button>
                     <h3>Top Up Balance</h3>
-                    <div class="input-wrapper">
-                        <input type="number" id="deposit-amount-input" value="1" min="0.1">
-                        <img src="https://ton.org/download/ton_symbol.svg" class="input-ton-logo" alt="TON">
+                    
+                    <div class="wallet-status-badge">
+                        <span>رصيد المحفظة المتصلة: </span>
+                        <span id="wallet-connected-balance" style="font-weight:bold; color:#2ecc71;">غير متصلة</span>
                     </div>
+
+                    <div class="input-wrapper">
+                        <input type="number" id="deposit-amount-input" value="1" min="0.1" step="0.1">
+                        <span class="input-ton-sticker">💎 TON</span>
+                    </div>
+
+                    <div class="quick-deposit-buttons">
+                        <button onclick="setAmount(1)">+1 TON</button>
+                        <button onclick="setAmount(5)">+5 TON</button>
+                        <button onclick="setAmount(10)">+10 TON</button>
+                    </div>
+
                     <button id="execute-deposit-btn" class="main-deposit-execute-btn">Top Up</button>
                 </div>
             </div>
@@ -91,6 +117,7 @@
     </div>
 
     <div id="ton-connect-hidden-element" style="display: none;"></div>
-    <script src="script.js"></script>
+
+    <script src="script.js?v=991"></script>
 </body>
 </html>
