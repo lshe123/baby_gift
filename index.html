@@ -31,7 +31,7 @@
                 <div class="balance-details">
                     <span id="user-name">علي</span>
                     <div class="ton-balance-row">
-                        <span class="ton-sticker-icon">💎</span>
+                        <img src="https://epicgift.app/assets/images/ton_symbol.svg" class="ton-mini-logo" alt="TON">
                         <span id="header-balance-view">0.00</span>
                     </div>
                 </div>
@@ -49,7 +49,7 @@
                 <div class="rocket-game-card">
                     <div class="card-tag">🚀 ROCKET GAME</div>
                     <div id="rocket-animation-area" class="rocket-sky">
-                        <div id="rocket-sprite" class="rocket-element">🚀</div>
+                        <img id="rocket-sprite" src="https://epicgift.app/assets/rocket-banner/rocket.png" class="rocket-element" alt="Rocket">
                         <div id="live-multiplier">1.00x</div>
                     </div>
                     <div class="rocket-controls">
@@ -101,7 +101,10 @@
 
                     <div class="input-wrapper">
                         <input type="number" id="deposit-amount-input" value="1" min="0.1" step="0.1">
-                        <span class="input-ton-sticker">💎 TON</span>
+                        <div class="input-sticker-wrapper">
+                            <img src="https://epicgift.app/assets/images/ton_symbol.svg" class="input-ton-logo-inner" alt="TON">
+                            <span class="input-ton-text">TON</span>
+                        </div>
                     </div>
 
                     <div class="quick-deposit-buttons">
@@ -117,7 +120,6 @@
     </div>
 
     <div id="ton-connect-hidden-element" style="display: none;"></div>
-
-    <script src="script.js?v=991"></script>
+    <script src="script.js?v=995"></script>
 </body>
 </html>
