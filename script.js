@@ -1,4 +1,3 @@
-// لغات البوت المترجمة للتبديل الفوري
 const translations = {
     ar: {
         boxesTitle: "🎁 الصناديق والمكافآت النشطة",
@@ -19,7 +18,7 @@ const translations = {
 };
 
 let currentLang = 'ar';
-let internalBotBalance = 0.00; // الرصيد الافتراضي تم تصفيره 0.00 كما طلبت بالملي
+let internalBotBalance = 0.00; // الرصيد يبدأ بـ 0.00 تماماً كما طلبت
 
 window.selectLanguage = function(lang) {
     currentLang = lang;
@@ -36,11 +35,8 @@ window.selectLanguage = function(lang) {
 
 window.addEventListener("load", () => {
     const tg = window.Telegram?.WebApp;
-    
-    // إظهار وتحديث الرصيد الافتراضي الأولي في الهيدر
     document.getElementById('header-balance-view').innerText = internalBotBalance.toFixed(2);
 
-    // معالجة بيانات تليجرام بدقة وضمان عدم ظهور أيقونة الصورة مكسورة
     if (tg) {
         tg.expand();
         tg.ready();
@@ -56,7 +52,6 @@ window.addEventListener("load", () => {
                 avatarImg.style.display = "block";
                 avatarFallback.style.display = "none";
             } else {
-                // وضع الحرف الأول من اسم المستخدم داخل الدائرة تلقائياً لمنع ظهور الأيقونة المكسورة
                 avatarFallback.innerText = user.first_name.charAt(0).toUpperCase();
                 avatarImg.style.display = "none";
                 avatarFallback.style.display = "flex";
@@ -64,7 +59,6 @@ window.addEventListener("load", () => {
         }
     }
 
-    // تهيئة مكتبة اتصال الـ TON Connect بربط خلفي ذكي
     let tonConnectUI;
     try {
         tonConnectUI = new window.TONConnectUI.TonConnectUI({
@@ -98,7 +92,6 @@ window.addEventListener("load", () => {
         });
     }
 
-    // حركة وتنقل الواجهات والصفحات داخلياً بالبوت
     document.getElementById('deposit-nav-btn').addEventListener('click', () => {
         document.getElementById('game-view-section').style.display = 'none';
         document.getElementById('deposit-view-section').style.display = 'block';
@@ -112,24 +105,22 @@ window.addEventListener("load", () => {
         document.getElementById('deposit-amount-input').value = val;
     };
 
-    // 🚀 تشغيل الطيارة وإجبارها على الشروط الدقيقة الجديدة المطلوبة
+    // 🚀 تشغيل الطيارة وحساب النسب بدقة (80% بين 1 و2، و20% من 2 إلى 100)
     window.startRocketRound = function() {
         const btn = document.getElementById('place-bet-btn');
         const viewMultiplier = document.getElementById('live-multiplier');
         const rocket = document.getElementById('rocket-sprite');
         
         btn.disabled = true;
-        rocket.style.transform = "translate(0px, 0px) scale(1)";
+        rocket.style.transform = "translate(0px, 0px) rotate(0deg) scale(1)";
         
         let finalCrashPoint;
-        const randomChance = Math.random() * 100; // ميزان عشوائي لنسب الفوز والخسارة
+        const randomChance = Math.random() * 100;
         
         if (randomChance <= 80) {
-            // شرط 1: تنفجر بين 1.00 و 2.00 بنسبة 80% في المئة
-            finalCrashPoint = 1.00 + (Math.random() * 1.00);
+            finalCrashPoint = 1.00 + (Math.random() * 1.00); // تنفجر بين 1.00 و 2.00 بنسبة 80%
         } else {
-            // شرط 2: ترتفع من 2.00 وتصل لـ 100 وتنفجر بنسبة 20% في المئة
-            finalCrashPoint = 2.00 + (Math.random() * 98.00);
+            finalCrashPoint = 2.00 + (Math.random() * 98.00); // ترتفع من 2.00 لـ 100 وتنفجر بنسبة 20%
         }
         
         let currentMultiplier = 1.00;
@@ -137,46 +128,42 @@ window.addEventListener("load", () => {
             currentMultiplier += 0.04;
             viewMultiplier.innerText = currentMultiplier.toFixed(2) + "x";
             
-            let xProgress = (currentMultiplier - 1) * 9;
-            let yProgress = -(currentMultiplier - 1) * 6;
-            rocket.style.transform = `translate(${xProgress}px, ${yProgress}px) scale(1.1)`;
+            // حساب حركة تصاعدية رشيقة تناسب مظهر الطائرة الجديدة
+            let xProgress = (currentMultiplier - 1) * 12;
+            let yProgress = -(currentMultiplier - 1) * 8;
+            rocket.style.transform = `translate(${xProgress}px, ${yProgress}px) rotate(-15deg) scale(1)`;
             
             if (currentMultiplier >= finalCrashPoint) {
                 clearInterval(gameInterval);
                 viewMultiplier.innerText = "💥 CRASHED " + finalCrashPoint.toFixed(2) + "x";
                 alert(translations[currentLang].exploded + finalCrashPoint.toFixed(2) + "x");
                 btn.disabled = false;
-                rocket.style.transform = "translate(0px, 0px) scale(1)";
+                rocket.style.transform = "translate(0px, 0px) rotate(0deg) scale(1)";
             }
         }, 50);
     };
 
-    // 📦 معالجة فتح الصناديق بالنسب الفائزة والشروط المطلوبة تماماً
+    // 📦 فتح الصناديق بالنسب الدقيقة المطلوبة (90% ربح عملات، و10% الباقي هدايا بين 5 و 5000 تون)
     window.openGiftBox = function(boxName) {
         const lootChance = Math.random() * 100;
         
-        // الاحتمال الأول: نسبة 90% تفوز بالعملات السهلة (0.1 تون أو 0.5 تون أو 1 تون)
         if (lootChance <= 90) {
             const tonOptions = [0.1, 0.5, 1.0];
             const prizeTon = tonOptions[Math.floor(Math.random() * tonOptions.length)];
             
-            // إضافة الجائزة لرصيد الهيدر فوراً
             internalBotBalance += prizeTon;
             document.getElementById('header-balance-view').innerText = internalBotBalance.toFixed(2);
             
             alert(`${translations[currentLang].winTon} ${prizeTon} TON ✨`);
-        } 
-        // الاحتمال الثاني: نسبة الفوز 1% أو الباقي للهدايا الكبرى التي تتراوح قيمتها من 5 إلى 5000 تون
-        else {
+        } else {
             const rareGifts = ["ساعة رولكس الملكية", "سيارة تيسلا مصغرة", "مفتاح دوروف الماسي", "خاتم الطاقة المشحون"];
             const prizeGift = rareGifts[Math.floor(Math.random() * rareGifts.length)];
-            const randomValue = Math.floor(5 + Math.random() * 4995); // يتراوح قيمته بين 5 و 5000 تون
+            const randomValue = Math.floor(5 + Math.random() * 4995); 
             
             alert(`${translations[currentLang].winGift} [${prizeGift}] بقيمة افتراضية توازي ${randomValue} TON!`);
         }
     };
 
-    // تنفيذ عمليات الشحن والتحويل التلقائي لتطبيق Tonkeeper
     document.getElementById('execute-deposit-btn').addEventListener('click', async () => {
         if (!tonConnectUI || !tonConnectUI.connected) {
             alert(translations[currentLang].connectAlert);
@@ -206,8 +193,6 @@ window.addEventListener("load", () => {
 
         try {
             await tonConnectUI.sendTransaction(transaction);
-            
-            // تحديث رصيد البوت مباشرة عند نجاح الشحن من المحفظة
             internalBotBalance += inputAmount;
             document.getElementById('header-balance-view').innerText = internalBotBalance.toFixed(2);
             
