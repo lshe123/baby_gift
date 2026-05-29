@@ -22,29 +22,29 @@ const translations = {
 };
 
 let currentLang = 'ar';
-let internalBotBalance = 0.00; // يبدأ الرصيد بـ 0.00 تماماً
-const boxCost = 0.5; // تكلفة الدفع الفعلي عند انتهاء المحاولة المجانية
+let internalBotBalance = 0.00; 
+const boxCost = 0.5; 
 
-// قاعدة بيانات الهدايا من ملفك المرفق
+// قاعدة بيانات الهدايا والنسب الحقيقية المأخوذة من ملفك بالملي %
 const premiumGiftsDatabase = [
     { name: "Nail Bracelet", val: 88.30, img: "https://cdn.changes.tg/gifts/models/Nail%20Bracelet/png/Original.png", chance: 0.01 },
     { name: "Bonded Ring", val: 30.60, img: "https://cdn.changes.tg/gifts/models/Bonded%20Ring/png/Original.png", chance: 0.02 },
     { name: "Signet Ring", val: 24.00, img: "https://cdn.changes.tg/gifts/models/Signet%20Ring/png/Original.png", chance: 0.05 },
     { name: "Diamond Ring", val: 19.50, img: "https://cdn.changes.tg/gifts/models/Diamond%20Ring/png/Original.png", chance: 0.05 },
-    { name: "Cupid Charm", val: 13.57, img: "https://cdn.changes.tg/gifts/models/Cupid%20Charm/png/Original.png", chance: 0.1 },
-    { name: "Crystal Ball", val: 7.66, img: "https://cdn.changes.tg/gifts/models/Crystal%20Ball/png/Original.png", chance: 0.1 },
-    { name: "Love Candle", val: 6.40, img: "https://cdn.changes.tg/gifts/models/Love%20Candle/png/Original.png", chance: 0.1 },
-    { name: "Jolly Chimp", val: 5.40, img: "https://cdn.changes.tg/gifts/models/Jolly%20Chimp/png/Original.png", chance: 0.2 },
-    { name: "Light Sword", val: 4.42, img: "https://cdn.changes.tg/gifts/models/Light%20Sword/png/Original.png", chance: 0.2 },
-    { name: "Lush Bouquet", val: 4.14, img: "https://cdn.changes.tg/gifts/models/Lush%20Bouquet/png/Original.png", chance: 0.2 },
-    { name: "Snoop Dogg", val: 4.00, img: "https://cdn.changes.tg/gifts/models/Snoop%20Dogg/png/Original.png", chance: 0.3 },
-    { name: "Input Key", val: 3.75, img: "https://cdn.changes.tg/gifts/models/Input%20Key/png/Original.png", chance: 0.3 },
-    { name: "Spring Basket", val: 3.44, img: "https://cdn.changes.tg/gifts/models/Spring%20Basket/png/Original.png", chance: 0.3 },
-    { name: "Pretty Posy", val: 3.11, img: "https://cdn.changes.tg/gifts/models/Pretty%20Posy/png/Original.png", chance: 0.3 },
-    { name: "Mousse Cake", val: 3.03, img: "https://cdn.changes.tg/gifts/models/Mousse%20Cake/png/Original.png", chance: 0.3 },
-    { name: "Victory Medal", val: 3.00, img: "https://cdn.changes.tg/gifts/models/Victory%20Medal/png/Original.png", chance: 0.5 },
-    { name: "Happy Brownie", val: 2.90, img: "https://cdn.changes.tg/gifts/models/Happy%20Brownie/png/Original.png", chance: 1.0 },
-    { name: "Money Pot", val: 2.85, img: "https://cdn.changes.tg/gifts/models/Money%20Pot/png/Original.png", chance: 1.0 }
+    { name: "Cupid Charm", val: 13.57, img: "https://cdn.changes.tg/gifts/models/Cupid%20Charm/png/Original.png", chance: 0.10 },
+    { name: "Crystal Ball", val: 7.66, img: "https://cdn.changes.tg/gifts/models/Crystal%20Ball/png/Original.png", chance: 0.10 },
+    { name: "Love Candle", val: 6.40, img: "https://cdn.changes.tg/gifts/models/Love%20Candle/png/Original.png", chance: 0.10 },
+    { name: "Jolly Chimp", val: 5.40, img: "https://cdn.changes.tg/gifts/models/Jolly%20Chimp/png/Original.png", chance: 0.20 },
+    { name: "Light Sword", val: 4.42, img: "https://cdn.changes.tg/gifts/models/Light%20Sword/png/Original.png", chance: 0.20 },
+    { name: "Lush Bouquet", val: 4.14, img: "https://cdn.changes.tg/gifts/models/Lush%20Bouquet/png/Original.png", chance: 0.20 },
+    { name: "Snoop Dogg", val: 4.00, img: "https://cdn.changes.tg/gifts/models/Snoop%20Dogg/png/Original.png", chance: 0.30 },
+    { name: "Input Key", val: 3.75, img: "https://cdn.changes.tg/gifts/models/Input%20Key/png/Original.png", chance: 0.30 },
+    { name: "Spring Basket", val: 3.44, img: "https://cdn.changes.tg/gifts/models/Spring%20Basket/png/Original.png", chance: 0.30 },
+    { name: "Pretty Posy", val: 3.11, img: "https://cdn.changes.tg/gifts/models/Pretty%20Posy/png/Original.png", chance: 0.30 },
+    { name: "Mousse Cake", val: 3.03, img: "https://cdn.changes.tg/gifts/models/Mousse%20Cake/png/Original.png", chance: 0.30 },
+    { name: "Victory Medal", val: 3.00, img: "https://cdn.changes.tg/gifts/models/Victory%20Medal/png/Original.png", chance: 0.50 },
+    { name: "Happy Brownie", val: 2.90, img: "https://cdn.changes.tg/gifts/models/Happy%20Brownie/png/Original.png", chance: 1.00 },
+    { name: "Money Pot", val: 2.85, img: "https://cdn.changes.tg/gifts/models/Money%20Pot/png/Original.png", chance: 1.00 }
 ];
 
 window.selectLanguage = function(lang) {
@@ -56,7 +56,6 @@ window.selectLanguage = function(lang) {
     updateCooldownUI();
 };
 
-// فحص وعرض الوقت المتبقي للمحاولة المجانية
 function updateCooldownUI() {
     const lastOpen = localStorage.getItem('last_free_box_time');
     const boxDesc = document.getElementById('box-cooldown-text');
@@ -69,7 +68,7 @@ function updateCooldownUI() {
     }
 
     const elapsed = Date.now() - parseInt(lastOpen);
-    const cooldown = 24 * 60 * 60 * 1000; // 24 ساعة
+    const cooldown = 24 * 60 * 60 * 1000; 
 
     if (elapsed < cooldown) {
         const remaining = cooldown - elapsed;
@@ -86,7 +85,6 @@ function updateCooldownUI() {
     }
 }
 
-// دالة التحقق من الـ 24 ساعة لفتح الصندوق
 window.tryOpenFreeBox = function() {
     const lastOpen = localStorage.getItem('last_free_box_time');
     const cooldown = 24 * 60 * 60 * 1000;
@@ -109,22 +107,30 @@ window.tryOpenFreeBox = function() {
     }
 };
 
-// سحب الجوائز بنسبة 90% عملات و10% بقية الهدايا مع صورها الفعلية
+// 🎯 محرك الاحتساب العشوائي الدقيق بناءً على النسب المئوية المدخلة بالملي %
 function executeBoxOpeningLogic() {
-    const lootChance = Math.random() * 100;
-    
-    if (lootChance <= 90) {
-        const tonOptions = [0.1, 0.5, 1.0];
-        const prizeTon = tonOptions[Math.floor(Math.random() * tonOptions.length)];
-        
-        internalBotBalance += prizeTon;
-        document.getElementById('header-balance-view').innerText = internalBotBalance.toFixed(2);
-        
-        showPrizeModal("https://epicgift.app/assets/images/ton_symbol.svg", `${prizeTon} TON`, `Direct Cryptocurrency Prize`);
-    } else {
-        const randomGift = premiumGiftsDatabase[Math.floor(Math.random() * premiumGiftsDatabase.length)];
-        showPrizeModal(randomGift.img, randomGift.name, `Value: ${randomGift.val.toFixed(2)} TON (Chance: ${randomGift.chance}%)`);
+    const randomPercent = Math.random() * 100; // سحب رقم عشوائي بين 0 و 100
+    let cumulativeChance = 0;
+
+    // فحص مصفوفة الهدايا الفخمة التراكمية بالترتيب
+    for (let i = 0; i < premiumGiftsDatabase.length; i++) {
+        cumulativeChance += premiumGiftsDatabase[i].chance;
+        if (randomPercent <= cumulativeChance) {
+            // فاز بهدية من الملف النصي
+            const gift = premiumGiftsDatabase[i];
+            showPrizeModal(gift.img, gift.name, `Value: ${gift.val.toFixed(2)} TON (Drop Rate: ${gift.chance}%)`);
+            return;
+        }
     }
+
+    // إذا لم يقع السحب العشوائي الدقيق ضمن كروت الهدايا النادرة (وهي النسبة الأكبر المتبقية للفوز بالعملة)
+    const tonOptions = [0.1, 0.2, 0.5];
+    const prizeTon = tonOptions[Math.floor(Math.random() * tonOptions.length)];
+    
+    internalBotBalance += prizeTon;
+    document.getElementById('header-balance-view').innerText = internalBotBalance.toFixed(2);
+    
+    showPrizeModal("https://epicgift.app/assets/images/ton_symbol.svg", `${prizeTon} TON`, `Direct Crypto Reward`);
 }
 
 function showPrizeModal(imgUrl, nameText, valText) {
@@ -236,7 +242,7 @@ window.addEventListener("load", () => {
         }, 50);
     };
 
-    // الشحن
+    // الشحن المعزز لـ TON CONNECT 2.0
     document.getElementById('execute-deposit-btn').addEventListener('click', async () => {
         if (!tonConnectUI || !tonConnectUI.connected) {
             alert(translations[currentLang].connectAlert);
