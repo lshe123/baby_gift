@@ -22,10 +22,10 @@ const translations = {
 };
 
 let currentLang = 'ar';
-let internalBotBalance = 0.00; 
-const boxCost = 0.5; // سعر فتح الصندوق إذا لم تكن المحاولة مجانية
+let internalBotBalance = 0.00; // يبدأ الرصيد بـ 0.00 تماماً
+const boxCost = 0.5; // تكلفة الدفع الفعلي عند انتهاء المحاولة المجانية
 
-// 📜 مصفوفة الهدايا والنسب الكاملة كما وردت في ملفك (free 24h.txt)
+// قاعدة بيانات الهدايا من ملفك المرفق
 const premiumGiftsDatabase = [
     { name: "Nail Bracelet", val: 88.30, img: "https://cdn.changes.tg/gifts/models/Nail%20Bracelet/png/Original.png", chance: 0.01 },
     { name: "Bonded Ring", val: 30.60, img: "https://cdn.changes.tg/gifts/models/Bonded%20Ring/png/Original.png", chance: 0.02 },
@@ -56,20 +56,20 @@ window.selectLanguage = function(lang) {
     updateCooldownUI();
 };
 
-// فحص وتهيئة الوقت المتبقي للمحاولة المجانية
+// فحص وعرض الوقت المتبقي للمحاولة المجانية
 function updateCooldownUI() {
     const lastOpen = localStorage.getItem('last_free_box_time');
     const boxDesc = document.getElementById('box-cooldown-text');
     const openBtn = document.getElementById('open-box-action-btn');
     
     if (!lastOpen) {
-        boxDesc.innerText = currentLang === 'ar' ? "صندوق مجاني جاهز للفتح الآن!" : "Free spin is ready right now!";
+        boxDesc.innerText = currentLang === 'ar' ? "المحاولة المجانية متاحة لك الآن!" : "Your free daily open is ready!";
         openBtn.innerText = currentLang === 'ar' ? "فتح مجاني" : "Free Open";
         return;
     }
 
     const elapsed = Date.now() - parseInt(lastOpen);
-    const cooldown = 24 * 60 * 60 * 1000; // 24 ساعة بالملي ثانية
+    const cooldown = 24 * 60 * 60 * 1000; // 24 ساعة
 
     if (elapsed < cooldown) {
         const remaining = cooldown - elapsed;
@@ -77,27 +77,25 @@ function updateCooldownUI() {
         const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
         
         boxDesc.innerText = currentLang === 'ar' 
-            ? `المجاني القادم بعد: ${hours}ساعة و ${minutes}دقيقة (أو افتح بـ 0.5 TON)` 
-            : `Next Free in: ${hours}h ${minutes}m (or pay 0.5 TON)`;
+            ? `المجاني القادم بعد: ${hours}ساعة و ${minutes}دقيقة` 
+            : `Next Free in: ${hours}h ${minutes}m`;
         openBtn.innerText = currentLang === 'ar' ? "فتح (0.5 TON)" : "Open (0.5 TON)";
     } else {
-        boxDesc.innerText = currentLang === 'ar' ? "صندوق مجاني جاهز للفتح الآن!" : "Free spin is ready right now!";
+        boxDesc.innerText = currentLang === 'ar' ? "المحاولة المجانية متاحة لك الآن!" : "Your free daily open is ready!";
         openBtn.innerText = currentLang === 'ar' ? "فتح مجاني" : "Free Open";
     }
 }
 
-// دالة فحص وتفعيل المحاولة المجانية أو المدفوعة
+// دالة التحقق من الـ 24 ساعة لفتح الصندوق
 window.tryOpenFreeBox = function() {
     const lastOpen = localStorage.getItem('last_free_box_time');
     const cooldown = 24 * 60 * 60 * 1000;
     
     if (!lastOpen || (Date.now() - parseInt(lastOpen) >= cooldown)) {
-        // محاولة مجانية ناجحة
         localStorage.setItem('last_free_box_time', Date.now().toString());
         updateCooldownUI();
         executeBoxOpeningLogic();
     } else {
-        // المحاولة المجانية مستخدمة -> ننتقل للمدفوعة بخصم 0.5 طون من رصيد البوت
         if (internalBotBalance >= boxCost) {
             internalBotBalance -= boxCost;
             document.getElementById('header-balance-view').innerText = internalBotBalance.toFixed(2);
@@ -111,11 +109,10 @@ window.tryOpenFreeBox = function() {
     }
 };
 
-// منطق سحب الهدايا الاحترافي بناءً على ملف النسب الدقيق (90% طون و10% بقية الجدول)
+// سحب الجوائز بنسبة 90% عملات و10% بقية الهدايا مع صورها الفعلية
 function executeBoxOpeningLogic() {
     const lootChance = Math.random() * 100;
     
-    // 90% الفوز بالعملات المباشرة (0.1، 0.5، 1)
     if (lootChance <= 90) {
         const tonOptions = [0.1, 0.5, 1.0];
         const prizeTon = tonOptions[Math.floor(Math.random() * tonOptions.length)];
@@ -123,12 +120,8 @@ function executeBoxOpeningLogic() {
         internalBotBalance += prizeTon;
         document.getElementById('header-balance-view').innerText = internalBotBalance.toFixed(2);
         
-        // عرض البوب آب الاحترافي
         showPrizeModal("https://epicgift.app/assets/images/ton_symbol.svg", `${prizeTon} TON`, `Direct Cryptocurrency Prize`);
-    } 
-    // 10% الفوز بأحد الهدايا النادرة من ملفك مع صورتها وسعرها الفعلي المكتوب
-    else {
-        // سحب هدية عشوائية ذكية مع احترام أولوية التوزيع
+    } else {
         const randomGift = premiumGiftsDatabase[Math.floor(Math.random() * premiumGiftsDatabase.length)];
         showPrizeModal(randomGift.img, randomGift.name, `Value: ${randomGift.val.toFixed(2)} TON (Chance: ${randomGift.chance}%)`);
     }
@@ -149,7 +142,7 @@ window.closePrizeModal = function() {
 window.addEventListener("load", () => {
     const tg = window.Telegram?.WebApp;
     document.getElementById('header-balance-view').innerText = internalBotBalance.toFixed(2);
-    setInterval(updateCooldownUI, 30000); // تحديث عداد الوقت كل نصف دقيقة تلقائياً
+    setInterval(updateCooldownUI, 30000);
 
     if (tg) {
         tg.expand();
@@ -178,7 +171,7 @@ window.addEventListener("load", () => {
             manifestUrl: window.location.origin + '/tonconnect-manifest.json',
             buttonRootId: 'ton-connect-hidden-element'
         });
-    } catch (error) { console.error(error); }
+    } catch (e) { console.error(e); }
 
     async function fetchWalletBalance(walletAddress) {
         try {
@@ -198,7 +191,6 @@ window.addEventListener("load", () => {
         });
     }
 
-    // التنقلات
     document.getElementById('deposit-nav-btn').addEventListener('click', () => {
         document.getElementById('game-view-section').style.display = 'none';
         document.getElementById('deposit-view-section').style.display = 'block';
@@ -244,7 +236,7 @@ window.addEventListener("load", () => {
         }, 50);
     };
 
-    // تنفيذ الشحن
+    // الشحن
     document.getElementById('execute-deposit-btn').addEventListener('click', async () => {
         if (!tonConnectUI || !tonConnectUI.connected) {
             alert(translations[currentLang].connectAlert);
