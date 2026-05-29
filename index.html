@@ -70,18 +70,26 @@
                 </div>
 
                 <h3 id="section-boxes-title">📦 الصناديق والمكافآت النشطة</h3>
-                <div class="boxes-grid">
-                    
-                    <div class="gift-box-card variant-premium">
-                        <div class="neon-box-icon">🎁✨</div>
-                        <div class="box-info-text">
-                            <h4 class="box-name">Free 24h Box</h4>
-                            <p class="box-desc" id="box-cooldown-text">صندوق مجاني كل 24 ساعة أو الدفع (0.5 TON)</p>
+                
+                <div class="epic-boxes-container">
+                    <div class="epic-box-card">
+                        <div class="epic-box-header">
+                            <span class="epic-badge-free">FREE DAILY</span>
+                            <h4 class="epic-box-title">Free 24h Box</h4>
                         </div>
-                        <button class="open-box-btn" id="open-box-action-btn" onclick="tryOpenFreeBox()">Open</button>
-                    </div>
+                        
+                        <div class="epic-box-image-wrapper">
+                            <img src="https://epicgift.app/assets/images/free24.png" class="epic-actual-box-img" alt="Free 24h Box">
+                            <div class="glow-effect-under"></div>
+                        </div>
 
+                        <div class="epic-box-footer-info">
+                            <p class="epic-cooldown-timer" id="box-cooldown-text">جاري فحص حالة الصندوق...</p>
+                            <button class="epic-open-action-btn" id="open-box-action-btn" onclick="tryOpenFreeBox()">Open Box</button>
+                        </div>
+                    </div>
                 </div>
+
             </div>
 
             <div id="deposit-view-section" class="view-section" style="display: none;">
@@ -115,6 +123,7 @@
     </div>
 
     <div id="ton-connect-hidden-element" style="display: none;"></div>
-    <script src="script.js?v=997"></script>
+
+    <script src="script.js?v=999"></script>
 </body>
 </html>
