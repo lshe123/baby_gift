@@ -5,20 +5,128 @@
 }
 
 body {
-    background-color: #0d0d12;
+    background-color: #07070a; /* لون غامق فخم نفس التطبيقات الكبرى */
     color: #ffffff;
     font-family: system-ui, -apple-system, sans-serif;
     user-select: none;
 }
 
-/* 🎁 تصميم نافذة الهدايا والـ Pop-up */
+/* 🎁 تصميم حاوية وكروت الصناديق الفخمة المطابقة لـ Epic Gift بالملي */
+.epic-boxes-container {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    width: 100%;
+}
+
+.epic-box-card {
+    background: linear-gradient(145deg, #12121a, #0e0e14);
+    border: 1px solid #1f1f2e;
+    border-radius: 28px;
+    width: 100%;
+    max-width: 340px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.7);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.epic-box-header {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 15px;
+}
+
+.epic-badge-free {
+    background: linear-gradient(90deg, #ff9233, #ff5e3a);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 900;
+    padding: 4px 12px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.epic-box-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: #ffffff;
+}
+
+/* موضع ومظهر صورة الصندوق الثلاثية الأبعاد مع النيون السفلي */
+.epic-box-image-wrapper {
+    position: relative;
+    width: 180px;
+    height: 180px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px 0;
+}
+
+.epic-actual-box-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    z-index: 2;
+    filter: drop-shadow(0px 10px 20px rgba(0,0,0,0.5));
+}
+
+.glow-effect-under {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    background: radial-gradient(circle, rgba(255,146,51,0.25) 0%, rgba(0,0,0,0) 70%);
+    bottom: -10px;
+    z-index: 1;
+}
+
+.epic-box-footer-info {
+    width: 100%;
+    margin-top: 15px;
+}
+
+.epic-cooldown-timer {
+    font-size: 12px;
+    color: #a0a0b5;
+    margin-bottom: 12px;
+    font-weight: 500;
+}
+
+.epic-open-action-btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #00b4db, #0083b0); /* نيون سماوي فخم يناسب الهوية الجديدة */
+    color: #ffffff;
+    font-weight: 800;
+    font-size: 15px;
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0, 180, 219, 0.3);
+    transition: transform 0.2s;
+}
+
+.epic-open-action-btn:active {
+    transform: scale(0.98);
+}
+
+/* بوب آب الهدايا الكبرى */
 .prize-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.85);
+    background-color: rgba(0, 0, 0, 0.9);
     z-index: 20000;
     display: flex;
     justify-content: center;
@@ -27,292 +135,74 @@ body {
 }
 
 .prize-card {
-    background: linear-gradient(145deg, #1e1e2f, #13131a);
-    border: 2px solid #7048e8;
-    border-radius: 24px;
+    background: linear-gradient(145deg, #1a1a26, #0f0f14);
+    border: 2px solid #00b4db;
+    border-radius: 28px;
     padding: 30px;
     text-align: center;
-    max-width: 360px;
+    max-width: 350px;
     width: 100%;
-    box-shadow: 0 10px 30px rgba(112, 72, 232, 0.4);
+    box-shadow: 0 10px 40px rgba(0, 180, 219, 0.4);
 }
 
 .prize-image-container {
-    width: 120px;
-    height: 120px;
+    width: 130px;
+    height: 130px;
     margin: 20px auto;
-    background-color: #161622;
-    border-radius: 20px;
+    background-color: #07070a;
+    border-radius: 24px;
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 1px solid #2d2d3f;
+    border: 1px solid #1f1f2e;
 }
 
 .prize-image-container img {
-    max-width: 90%;
-    max-height: 90%;
+    max-width: 85%;
+    max-height: 85%;
     object-fit: contain;
 }
 
-#prize-modal-name {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 5px;
-    color: #fff;
-}
+#prize-modal-name { font-size: 21px; font-weight: 800; margin-bottom: 6px; }
+#prize-modal-value { font-size: 14px; color: #ff9233; margin-bottom: 25px; }
+.close-prize-btn { width: 100%; padding: 14px; background-color: #2ecc71; color: white; font-weight: bold; border: none; border-radius: 14px; cursor: pointer; font-size: 15px; }
+.animate-pop { animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+@keyframes popIn { 0% { transform: scale(0.7); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
-#prize-modal-value {
-    font-size: 14px;
-    color: #fab005;
-    margin-bottom: 25px;
-}
+/* بقية تصميم الواجهة والهيدر */
+.lang-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(7, 7, 10, 0.99); z-index: 10000; display: flex; justify-content: center; align-items: center; }
+.lang-box { background-color: #12121a; border: 1px solid #1f1f2e; padding: 30px; border-radius: 24px; text-align: center; max-width: 380px; width: 100%; }
+.lang-buttons { display: flex; gap: 15px; margin-top: 20px; }
+.lang-buttons button { flex: 1; padding: 14px; border-radius: 14px; border: none; background-color: #00b4db; color: #fff; font-weight: bold; cursor: pointer; }
 
-.close-prize-btn {
-    width: 100%;
-    padding: 12px;
-    background-color: #2ecc71;
-    color: white;
-    font-weight: bold;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-.animate-pop {
-    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-@keyframes popIn {
-    0% { transform: scale(0.7); opacity: 0; }
-    100% { transform: scale(1); opacity: 1; }
-}
-
-/* واجهة اللغات */
-.lang-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(13, 13, 18, 0.98);
-    z-index: 10000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-}
-
-.lang-box {
-    background: linear-gradient(135deg, #181824, #12121a);
-    border: 1px solid #2d2d3f;
-    padding: 30px;
-    border-radius: 24px;
-    text-align: center;
-    max-width: 400px;
-    width: 100%;
-}
-
-.lang-buttons {
-    display: flex;
-    gap: 15px;
-    margin-top: 20px;
-}
-
-.lang-buttons button {
-    flex: 1;
-    padding: 14px;
-    border-radius: 14px;
-    border: none;
-    background-color: #5f3dc4;
-    color: #fff;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-/* الهيدر */
-.custom-crypto-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 14px 16px;
-    background-color: #121218;
-    border-bottom: 1px solid #1f1f2a;
-}
-
-.user-info-side {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.avatar-wrapper {
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    overflow: hidden;
-    background-color: #2b2b3d;
-    border: 2px solid #5f3dc4;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-#user-avatar {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.avatar-fallback {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(135deg, #5f3dc4, #7048e8);
-    color: white;
-    font-weight: bold;
-}
-
-.ton-balance-row {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.ton-mini-logo {
-    width: 20px;
-    height: 20px;
-}
-
-#header-balance-view {
-    font-size: 19px;
-    font-weight: 800;
-}
-
-.deposit-button-style {
-    background-color: #5f3dc4;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 12px;
-    font-weight: bold;
-    cursor: pointer;
-}
+.custom-crypto-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; background-color: #0e0e14; border-bottom: 1px solid #1c1c28; }
+.user-info-side { display: flex; align-items: center; gap: 12px; }
+.avatar-wrapper { width: 42px; height: 42px; border-radius: 50%; overflow: hidden; background-color: #1c1c28; border: 2px solid #00b4db; display: flex; justify-content: center; align-items: center; }
+#user-avatar { width: 100%; height: 100%; object-fit: cover; }
+.avatar-fallback { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; background: linear-gradient(135deg, #00b4db, #0083b0); color: white; font-weight: bold; }
+.ton-balance-row { display: flex; align-items: center; gap: 6px; }
+.ton-mini-logo { width: 18px; height: 18px; }
+#header-balance-view { font-size: 19px; font-weight: 800; }
+.deposit-button-style { background-color: #00b4db; color: white; border: none; padding: 8px 16px; border-radius: 12px; font-weight: bold; cursor: pointer; }
 
 /* الطيارة */
-.rocket-game-card {
-    background-color: #161622;
-    border: 1px solid #252538;
-    border-radius: 20px;
-    padding: 15px;
-    margin: 20px;
-}
-
-.rocket-sky {
-    height: 165px;
-    background: radial-gradient(circle at bottom, #1c1c30, #0d0d12);
-    border-radius: 14px;
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 12px 0;
-}
-
-.rocket-element {
-    width: 55px;
-    position: absolute;
-    bottom: 15px;
-    left: 15px;
-    transition: transform 0.05s linear;
-}
-
-#live-multiplier {
-    font-size: 32px;
-    font-weight: 900;
-    color: #2ecc71;
-}
-
-.rocket-controls button {
-    width: 100%;
-    padding: 14px;
-    background-color: #3b5bdb;
-    border: none;
-    color: white;
-    font-weight: bold;
-    border-radius: 10px;
-    cursor: pointer;
-}
-
-/* تصميم الصناديق */
-.boxes-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    padding: 15px 20px;
-}
-
-.gift-box-card {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px;
-    border-radius: 18px;
-    background: linear-gradient(135deg, #161622, #12121a);
-    border: 1px solid #222235;
-    border-right: 4px solid #fab005;
-}
-
-.neon-box-icon {
-    font-size: 32px;
-    background-color: #1c1c2c;
-    width: 55px;
-    height: 55px;
-    border-radius: 14px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.box-info-text {
-    flex: 1;
-    margin: 0 15px;
-}
-
-.box-name {
-    font-size: 15px;
-    font-weight: bold;
-}
-
-.box-desc {
-    font-size: 11px;
-    color: #7c7c93;
-    margin-top: 2px;
-}
-
-.open-box-btn {
-    padding: 10px 20px;
-    background-color: #2ecc71;
-    color: white;
-    border: none;
-    border-radius: 12px;
-    font-weight: bold;
-    cursor: pointer;
-}
+.rocket-game-card { background-color: #12121a; border: 1px solid #1f1f2e; border-radius: 24px; padding: 15px; margin: 20px; }
+.card-tag { font-size: 11px; color: #00b4db; font-weight: 900; margin-bottom: 5px; }
+.rocket-sky { height: 150px; background: radial-gradient(circle at bottom, #161626, #07070a); border-radius: 16px; position: relative; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+.rocket-element { width: 50px; position: absolute; bottom: 15px; left: 15px; transition: transform 0.05s linear; }
+#live-multiplier { font-size: 32px; font-weight: 900; color: #2ecc71; }
+.rocket-controls button { width: 100%; padding: 14px; background-color: #00b4db; border: none; color: white; font-weight: bold; border-radius: 12px; cursor: pointer; }
 
 /* واجهة الشحن */
 .top-up-container { padding: 20px; }
-.back-btn { background: none; border: none; color: #3b5bdb; font-weight: bold; cursor: pointer; margin-bottom: 20px; }
-.wallet-status-badge { background-color: #161622; padding: 12px; border-radius: 10px; font-size: 13px; margin-bottom: 15px; border: 1px solid #222235; }
+.back-btn { background: none; border: none; color: #00b4db; font-weight: bold; cursor: pointer; margin-bottom: 20px; }
+.wallet-status-badge { background-color: #12121a; padding: 12px; border-radius: 12px; font-size: 13px; margin-bottom: 15px; border: 1px solid #1f1f2e; }
 .input-wrapper { position: relative; display: flex; align-items: center; margin-bottom: 15px; }
-.input-wrapper input { width: 100%; padding: 15px; background-color: #161622; border: 1px solid #252538; color: white; border-radius: 12px; font-size: 16px; font-weight: bold; padding-right: 85px; }
+.input-wrapper input { width: 100%; padding: 15px; background-color: #12121a; border: 1px solid #1f1f2e; color: white; border-radius: 14px; font-size: 16px; font-weight: bold; padding-right: 85px; }
 .input-sticker-wrapper { position: absolute; right: 15px; display: flex; align-items: center; gap: 6px; }
 .input-ton-logo-inner { width: 18px; height: 18px; }
-.input-ton-text { font-weight: bold; color: #6c5ce7; font-size: 14px; }
+.input-ton-text { font-weight: bold; color: #00b4db; font-size: 14px; }
 .quick-deposit-buttons { display: flex; gap: 10px; margin-bottom: 20px; }
-.quick-deposit-buttons button { flex: 1; padding: 10px; background-color: #1c1c2c; border: 1px solid #252538; color: white; border-radius: 8px; cursor: pointer; font-weight: bold; }
-.main-deposit-execute-btn { width: 100%; padding: 15px; background-color: #5f3dc4; border: none; color: white; font-weight: bold; border-radius: 12px; font-size: 16px; cursor: pointer; }
+.quick-deposit-buttons button { flex: 1; padding: 10px; background-color: #1c1c28; border: 1px solid #1f1f2e; color: white; border-radius: 8px; cursor: pointer; font-weight: bold; }
+.main-deposit-execute-btn { width: 100%; padding: 15px; background-color: #00b4db; border: none; color: white; font-weight: bold; border-radius: 14px; font-size: 16px; cursor: pointer; }
+#section-boxes-title { padding: 0 20px; font-size: 14px; color: #71718a; text-transform: uppercase; }
